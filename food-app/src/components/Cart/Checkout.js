@@ -48,7 +48,12 @@ const Checkout = (props) => {
     resetPostal();
     resetStreet();
 
-    props.onClearCart();
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      postalCode: enteredPostal,
+      city: enteredCity
+    });
     props.onCancel();
   };
 

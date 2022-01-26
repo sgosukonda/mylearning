@@ -1,6 +1,9 @@
+import React from "react";
+import useForm from "../../hooks/use-form";
 import formConfig from "../../utilities/formConfig";
+import styles from "./SignupForm.module.css";
 
-const signupForm = {
+const signupFormConfig = {
   name: {
     ...formConfig("Full Name", "name", "text"),
   },
@@ -19,3 +22,17 @@ const signupForm = {
     ),
   },
 };
+
+const SignupForm = () => {
+  const { renderFormInputs } = useForm(signupFormConfig);
+
+  return (
+    <form className={styles["signupForm"]}>
+      <h1>Sign Up Form</h1>
+      {renderFormInputs()}
+      <button type="Submit">Submit</button>
+    </form>
+  );
+};
+
+export default SignupForm;

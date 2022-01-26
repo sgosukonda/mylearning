@@ -4,11 +4,14 @@ import Modal from "../UI/Modal";
 import CartContext from "../../store/cart-context";
 import CartItem from "./CartItem";
 import Checkout from "./Checkout";
+import useHttp from "../../hooks/use-http";
 
 const Cart = (props) => {
   const cartContext = useContext(CartContext);
   const totalAmount = `$ ${cartContext.totalAmount.toFixed(2)}`;
   const hasItems = cartContext.items.length > 0;
+
+  const {sendRequest, isLoading: isSubmitting, errorMessage} = useHttp();
 
   const [showOrder, setShowOrder] = useState(false);
 
@@ -21,7 +24,15 @@ const Cart = (props) => {
     cartContext.removeItem(id);
   };
 
-  const clearCartHandler = (id) => {
+  const submitCartHandler = async (userData) => {
+    var data = await sendRequest({
+      url: "https://react-dea8b-default-rtdb.firebaseio.com/orders.json",
+      body: {
+        userData: userData,
+        orderItems: cartContext.items
+      },
+      method: "POST"
+    });
     cartContext.clearCart();
   };
 
@@ -64,7 +75,7 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {showOrder && <Checkout onCancel={props.onClose} onClearCart={clearCartHandler} />}
+      {showOrder && <Checkout onCancel={props.onClose} onConfirm={submitCartHandler} />}
       {!showOrder && orderButtons}
     </Modal>
   );
